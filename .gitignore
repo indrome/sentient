@@ -1,2 +1,7 @@
 features/*
 recognizer/aquila-dtw/aquila
+recognizer/aquila-dtw/bin
+extractor/lib
+extractor/bin
+server/bin
+
