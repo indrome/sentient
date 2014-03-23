@@ -10,6 +10,7 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 
 #define RECV_BUFF_SIZE 1024
@@ -19,8 +20,95 @@ using namespace std;
 int host_socket;
 
 
+static inline char* forward(char* stream){
+	while( *stream == ' ' ){
+		stream++;
+	}
+	return stream;
+}
+static inline char* check_token(char* stream, char tok){
+	if(*stream != tok){
+		cout << "ERROR: pasing JSON found " << *stream << " expected " << tok << endl;
+		exit(1);
+	}
+	return stream+1;
+}
+static inline string get_key(char* stream){
+
+	string keyword;
+
+	cout << "Checking for keywords" << endl;
+
+	stream = forward(stream);
+	stream = check_token(stream,'"');
+
+	while(*stream != '"' || isalpha(*stream)){
+		keyword += *stream;
+		stream++;
+	}
+
+	stream = check_token(stream,'"');
+	stream = forward(stream);	
+	
+	cout << "Found keyword " << keyword << endl;
+	return keyword;
+}
+
+static vector<short> get_vector(char* stream){
+
+	int signal;
+
+	vector<short> speech;
+	
+	stream = forward(stream);
+	stream = check_token(stream,'[');
+	stream = forward(stream);
 
 
+	while( sscanf(stream,"%d",&signal) > 0 ){
+
+		if((short)signal == 0)
+			speech.push_back((short)1);
+		else
+			speech.push_back((short)signal);	
+		while(isdigit(*stream) || *stream=='.' || *stream=='e' || *stream=='-') { 
+			stream++;	
+		}
+		stream = forward(stream);
+		if(*stream==',')
+			stream++;
+		else
+			break;
+	}
+	cout << endl;
+
+	stream = forward(stream);
+	stream = check_token(stream,']');
+
+	cout << "Parsed vector with " << speech.size() << " elements" << endl;
+
+	return speech;
+}
+
+vector<short> parse_vector(char* stream){
+
+	vector<short> value;
+
+	stream = forward(stream);
+	stream = check_token(stream,'{');
+	string keyword = get_key(stream);
+	stream += keyword.size()+4;
+	stream = forward(stream);
+
+	if( keyword.compare( string("DATA") )==0){
+
+		value = get_vector(stream);
+		stream = forward(stream);
+
+	}
+
+	return value;
+}
 
 
 void receive( int socket ){
@@ -50,36 +138,38 @@ void receive( int socket ){
 			
 		}
 		else {
-
 			payload = (char*) realloc( payload, payload_size+num_read);
 			memcpy(payload+payload_size,buffer,num_read);
 			payload_size += num_read;
-
-			cout << "Read " << num_read << " bytes" <<  endl;
-
 		}
 	}
+
 	cout << "Read totally: " << payload_size << " bytes" << endl;
 
 	FILE* fp = fopen("sample.json","w");
 	for(int i = 0; i < payload_size; i++)
 		fprintf(fp,"%c",payload[i]);
-	fclose(fp);
 
-	//SF_INFO info;
-	//info.channels = 1;
-	//info.samplerate = 16000;
-	//info.frames = 1;
-	//info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-	//SNDFILE* sf = sf_open("sample.wav",SFM_WRITE,&info);
-	//if( sf == NULL ){
-	//	printf("Failed to open file: sample.wav\n");
-	//	puts(sf_strerror(NULL));
-	//	exit(1);
-	//}
-	//int wrote_count = sf_write_short( sf, (short*)payload, payload_size );
-	//sf_close(sf);
+	vector<short> speech = parse_vector(payload);
 	
+	SF_INFO info;
+	info.channels = 1;
+	info.samplerate = 16000;
+	info.frames = 1;
+	info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
+	SNDFILE* sf = sf_open("sample.wav",SFM_WRITE,&info);
+
+	if( sf == NULL ){
+		printf("Failed to open file: sample.wav\n");
+		puts(sf_strerror(NULL));
+		exit(1);
+	}
+	int wrote_count = sf_write_short( sf, speech.data(), (size_t)speech.size());
+	sf_close(sf);
+
+	
+	system("../extraction/bin/extraction ./sample.wav");
+	system("../scripts/test_command.sh ./features.json");
 
 }
 

@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
 	precision* speech_cpy = new precision[info.frames*info.channels];
 	memcpy(speech_cpy,speech,sizeof(precision)*info.frames*info.channels);
 
-	write_speech(speech, info.frames*info.channels);
 
 	// ------------------
 	// Frame Speech
