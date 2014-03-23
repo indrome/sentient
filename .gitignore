@@ -1,3 +1,4 @@
+*.swp
 features/*
 recognizer/aquila-dtw/aquila
 recognizer/aquila-dtw/bin
