@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	frames = padd_frames(frames,num_frames,frame_length,nFFT);
 	precision** S = power_spectra(frames,num_frames,nFFT);
 	int nFFT_out = nFFT/2+1;
-	int filter_length = nFFT/2+1;
+	//int filter_length = nFFT/2+1;
 
 	// ------------------
 	// Triangle filterbank 
