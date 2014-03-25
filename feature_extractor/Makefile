@@ -8,8 +8,9 @@ all: extraction mfcc
 
 extraction: support.o processing.o
 	$(CXX) $(CFLAGS) src/extraction.cpp lib/support.o lib/processing.o $(LIBS) -o bin/extraction
+
 mfcc: support.o processing.o
-	$(CXX) $(CFLAGS) -c src/mfcc.cpp $(LIBS) -o lib/mfcc.o
+	$(CXX) $(CFLAGS) -c src/mfcc.cpp $(LIBS) -o lib/mfcc
 processing.o: src/processing.cpp include/processing.hpp
 	$(CXX) $(CFLAGS) -c src/processing.cpp $(LIBS) -o lib/processing.o
 support.o: src/support.cpp include/support.hpp

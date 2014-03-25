@@ -26,8 +26,22 @@ static precision sample_std(vector<precision> data, precision sample_mean){
 	return sqrt(1.0/(precision)data.size()*sum);	
 }
 
-vector<int> VAD(precision* speech, const int length){
+vector<int> online_VAD(precision* speech, const int length){
 	for( int i = 0; i < length; i++){
+		
+	}
+
+	return vector<int>();
+}
+vector<int> offline_VAD(precision* speech, const int length){
+
+	vector<precision> speech_vec;
+	for(int i = 0; i < length; i++) speech_vec.push_back(speech[i]);
+
+	precision xbar = mean(speech_vec);
+	precision xstd = sample_std(speech_vec, xbar);
+
+	for( int i = 0; i < length; i++) {
 		
 	}
 
