@@ -3,6 +3,6 @@ features/*
 recognizer/aquila-dtw/aquila
 recognizer/aquila-dtw/bin
 feature_extractor/lib
-feature_extractor/bin
+feature_extractor/bin 
 server/bin
 
