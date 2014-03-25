@@ -6,8 +6,33 @@
 #include <math.h>
 #include <utility>
 #include <support.hpp>
+#include <vector>
+
 
 using namespace std;
+
+static precision mean(vector<precision> data){
+	precision sum = 0.0;
+	for( precision e : data )	
+		sum += e;
+	return 1.0/(precision)data.size()*sum;
+}
+
+static precision sample_std(vector<precision> data, precision sample_mean){
+	precision sum = 0.0;
+	for(precision e : data){
+		sum += (e-sample_mean)*(e-sample_mean);
+	}
+	return sqrt(1.0/(precision)data.size()*sum);	
+}
+
+vector<int> VAD(precision* speech, const int length){
+	for( int i = 0; i < length; i++){
+		
+	}
+
+	return vector<int>();
+}
 
 pair<precision**,int> frame_speech( precision* speech, const int length, const int frame_length, const int frame_step) {
 

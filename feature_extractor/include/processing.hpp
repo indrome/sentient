@@ -1,8 +1,10 @@
 #include <utility>
+#include <vector>
 #include <support.hpp>
 
 using namespace std;
 
+vector<int> VAD(precision* speech, const int length);
 pair<precision**,int> frame_speech( precision* speech, const int length, const int frame_length, const int frame_step) ;
 void preemphasis(precision* speech, int length);
 precision** power_spectra(precision** frames, int num_frames, int nFFT);

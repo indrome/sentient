@@ -1,7 +1,6 @@
 LIBS=-lfftw3f -lfftw3 -lsndfile -lm 
 SRC=src/voice_control.cpp
-CFLAGS=-Wall -Iinclude/ -O3 
-CXX=g++
+CFLAGS=-Wall -Iinclude/ -O3 -std=c++11 
 
 .PHONY: all clean plot
 
