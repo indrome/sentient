@@ -9,6 +9,7 @@ bin/server: lib/json_parser.o src/server.cpp include/server.hpp
 	g++ $(CFLAGS) src/server.cpp lib/json_parser.o $(LDFLAGS) -o bin/server
 
 lib/json_parser.o: src/json_parser.cpp include/json_parser.hpp
+	mkdir -p lib/
 	g++ $(CFLAGS) src/json_parser.cpp -c $(LDFLAGS) -o lib/json_parser.o
 
 clean:
