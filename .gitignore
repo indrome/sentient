@@ -4,6 +4,7 @@ recognizer/aquila-dtw/aquila
 recognizer/aquila-dtw/dtw
 feature_extractor/lib
 feature_extractor/bin 
-server/bin
+server/bin/*
+server/lib/*
 bin/*
 
