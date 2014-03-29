@@ -22,5 +22,4 @@ plot:
 
 clean:
 	rm -rf lib/*
-	rm *.data
-	rm -rf bin/
+	rm -rf bin/*

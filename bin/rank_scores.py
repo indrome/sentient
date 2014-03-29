@@ -1,6 +1,10 @@
 import sys
+import subprocess
 import os
 from os import walk
+
+def strip_suffix(name):
+	return name[:name.find(".")]
 
 if __name__ == "__main__":
 
@@ -10,10 +14,16 @@ if __name__ == "__main__":
 
 	feature_file = sys.argv[1]
 
-	f = []
+	print "="*40
+	print "  Recognition scores"
+	print "="*40
+
+
+	scoreboard = []
 	for (dirpath, dirnames, filenames) in walk(sys.argv[2]):
 		for fname in filenames:
-			print fname+":\t"
-			os.system("recognizer/aquila-dtw/dtw "+feature_file+" "+dirpath+fname)
+			p = subprocess.Popen(["recognizer/aquila-dtw/dtw",feature_file,dirpath+fname],stdout=subprocess.PIPE)
+			out,err = p.communicate()
+			scoreboard.append( (fname,float(out.rstrip().strip())) )
 
-	
+	print "\n".join(map(lambda e: str(e[1])+"  "+strip_suffix(e[0]),sorted(scoreboard,key=lambda e: e[1])))
