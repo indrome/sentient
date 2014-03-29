@@ -1,3 +1,5 @@
+*.json
+*.wav
 *.swp
 features/*
 recognizer/aquila-dtw/aquila
@@ -7,3 +9,5 @@ feature_extractor/bin
 server/bin/*
 server/lib/*
 bin/*
+scripts/*
+reference/*

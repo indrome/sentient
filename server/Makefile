@@ -1,12 +1,12 @@
-CFLAGS= -std=c++11 -Iinclude/ -O3
-LDFLAGS=-pthread -lsndfile
+CFLAGS= -std=c++11 -Iinclude/ -I../feature_extractor/include  -O3
+LDFLAGS=-pthread -lsndfile ../feature_extractor/lib/*.o -lfftw3 -lfftw3f
 
 .PHONY: all clean
 
 all: lib/json_parser.o bin/server
 
 bin/server: lib/json_parser.o src/server.cpp include/server.hpp 
-	g++ $(CFLAGS) src/server.cpp lib/json_parser.o $(LDFLAGS) -o bin/server
+	g++ $(CFLAGS) -I../feature_extractor/include src/server.cpp lib/json_parser.o $(LDFLAGS) -o bin/server
 
 lib/json_parser.o: src/json_parser.cpp include/json_parser.hpp
 	mkdir -p lib/

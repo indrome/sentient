@@ -12,9 +12,9 @@ extraction: lib/support.o lib/processing.o
 
 lib/mfcc.o: src/mfcc.cpp 
 	$(CXX) $(CFLAGS) -c src/mfcc.cpp $(LIBS) -o lib/mfcc.o
-processing: src/processing.cpp include/processing.hpp
+lib/processing.o: src/processing.cpp include/processing.hpp
 	$(CXX) $(CFLAGS) -c src/processing.cpp $(LIBS) -o lib/processing.o
-support: src/support.cpp include/support.hpp
+lib/support.o: src/support.cpp include/support.hpp
 	$(CXX) $(CFLAGS) -c src/support.cpp -lsndfile -o lib/support.o
 
 plot:

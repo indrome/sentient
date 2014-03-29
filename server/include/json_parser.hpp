@@ -1,3 +1,4 @@
 #include <vector>
+#include <support.hpp>
 using namespace std;
-vector<short> parse_vector(char* stream);
+vector<precision> parse_vector(char* stream);

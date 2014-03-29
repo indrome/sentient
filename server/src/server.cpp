@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include <json_parser.hpp>
+#include <mfcc.hpp>
 
 #define RECV_BUFF_SIZE 1024
 
@@ -21,7 +22,7 @@ using namespace std;
 
 int host_socket;
 
-static void dump_speech_to_wav(vector<short> speech){
+static void dump_speech_to_wav(vector<precision> speech){
 
 	SF_INFO info;
 	info.channels = 1;
@@ -35,10 +36,21 @@ static void dump_speech_to_wav(vector<short> speech){
 		puts(sf_strerror(NULL));
 		exit(1);
 	}
-	int wrote_count = sf_write_short( sf, speech.data(), (size_t)speech.size());
+
+	vector<short> speech_short;
+	for( auto e : speech )
+		speech_short.push_back(e);
+
+	int wrote_count = sf_write_short( sf, speech_short.data(), (size_t)speech_short.size());
 	sf_close(sf);
 }
 
+
+void process(vector<precision> speech){
+	mfcc(speech.data(),16000,speech.size(),16000,1);	
+	//system("feature_extractor/bin/extraction ./sample.wav");
+	system("python2 bin/rank_scores.py ./features.json reference/");
+}
 
 void receive( int socket ){
 
@@ -75,12 +87,11 @@ void receive( int socket ){
 
 	cout << "Read totally: " << payload_size << " bytes" << endl;
 
-	vector<short> speech = parse_vector(payload);
-	thread thd = thread(dump_speech_to_wav, speech);
-	
-	system("../extraction/bin/extraction ./sample.wav");
-	system("../scripts/test_command.sh ./features.json");
+	vector<precision> speech = parse_vector(payload);
+	thread thd(dump_speech_to_wav, speech);
 
+	process(speech);
+	
 	thd.join();
 
 }
@@ -97,7 +108,6 @@ void setup_server(string host_addr, int host_port){
 	sockaddr_in addr; bzero(&addr, sizeof(sockaddr_in));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(host_port);
-	//addr.sin_addr.s_addr = INADDR_ANY; 
 	addr.sin_addr.s_addr = inet_addr(host_addr.c_str()); 
 
 	if( bind(host_socket, (struct sockaddr*) &addr, sizeof(addr)) < 0){
@@ -126,6 +136,9 @@ void loop_listen(){
 		threads.push_back( thread(receive,new_socket) );
 	}
 
+	for(int i = 0; i < threads.size(); i++)
+		threads[i].join();
+
 
 }
 
@@ -152,5 +165,8 @@ int main(int argc, char* argv[]){
 
 void usage( char* argv[] ){
 	cout << "Usage: " << argv[0] << " HOST_ADDRES HOST_PORT" << endl; 
+}
+void help( char* argv[] ){
+	cout << "--wav-file -f\tSpecifies a single wav-file as the single input to the program." << endl;
 }
 

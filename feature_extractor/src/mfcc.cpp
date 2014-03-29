@@ -1,5 +1,5 @@
-#include <support.hpp>
-#include <processing.hpp>
+#include "processing.hpp"
+#include <stdio.h>
 #include <sndfile.h>
 #include <math.h>
 #include <string.h>
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-precision**  mfcc( precision* speech, int sample_rate, int speech_frames, int Hz, int channels){
+precision** mfcc( precision* speech, int sample_rate, int speech_frames, int Hz, int channels){
 	
 	assert(channels == 1);
 	
@@ -46,6 +46,8 @@ precision**  mfcc( precision* speech, int sample_rate, int speech_frames, int Hz
 
 	int num_coeffs = 13;
 	precision** MFCC = extract_coefficients(D,num_frames, num_filters, num_coeffs,S,nFFT_out);
+
+	write_json(speech, speech_frames*channels, MFCC, num_frames, num_coeffs);
 
 	return MFCC;
 }

@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <support.hpp>
 
 using namespace std;
 
@@ -37,11 +38,11 @@ static inline string get_key(char* stream){
 	return keyword;
 }
 
-static vector<short> get_vector(char* stream){
+static vector<precision> get_vector(char* stream){
 
 	int signal;
 
-	vector<short> speech;
+	vector<precision> speech;
 	
 	stream = forward(stream);
 	stream = check_token(stream,'[');
@@ -51,9 +52,9 @@ static vector<short> get_vector(char* stream){
 	while( sscanf(stream,"%d",&signal) > 0 ){
 
 		if((short)signal == 0)
-			speech.push_back((short)1);
+			speech.push_back((precision)1.0);
 		else
-			speech.push_back((short)signal);	
+			speech.push_back((precision)signal);	
 		while(isdigit(*stream) || *stream=='.' || *stream=='e' || *stream=='-') { 
 			stream++;	
 		}
@@ -73,9 +74,9 @@ static vector<short> get_vector(char* stream){
 	return speech;
 }
 
-vector<short> parse_vector(char* stream){
+vector<precision> parse_vector(char* stream){
 
-	vector<short> value;
+	vector<precision> value;
 
 	stream = forward(stream);
 	stream = check_token(stream,'{');

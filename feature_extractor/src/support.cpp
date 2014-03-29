@@ -26,7 +26,9 @@ void write_json(precision* speech, int speech_len, precision** MFCC, int num_fea
 	fseek(fp,-1,SEEK_CUR);
 	fprintf(fp,"]}");
 
-	printf("Wrote features to file: features.json");
+	fclose(fp);
+
+	printf("Wrote features to file: features.json\n");
 
 }
 
