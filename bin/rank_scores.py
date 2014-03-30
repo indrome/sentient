@@ -26,4 +26,10 @@ if __name__ == "__main__":
 			out,err = p.communicate()
 			scoreboard.append( (fname,float(out.rstrip().strip())) )
 
-	print "\n".join(map(lambda e: str(e[1])+"  "+strip_suffix(e[0]),sorted(scoreboard,key=lambda e: e[1])))
+	sorted_score = sorted(scoreboard,key=lambda e: e[1])
+	print "\n".join(map(lambda e: str(e[1])+"  "+strip_suffix(e[0]),sorted_score))
+
+	cmd = strip_suffix(sorted_score[0][0])+".sh"
+	print "Running: ./commands/"+cmd
+
+	os.system("./commands/"+cmd)
