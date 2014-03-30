@@ -11,3 +11,4 @@ server/lib/*
 bin/*
 scripts/*
 reference/*
+commands/*
