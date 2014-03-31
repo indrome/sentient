@@ -16,4 +16,4 @@ server:
 feature_extractor:
 	$(MAKE) -C ./feature_extractor
 recognizer:
-	$(MAKE) -C ./recognizer/aquila-dtw
+	$(MAKE) -C ./recognizer/dtw

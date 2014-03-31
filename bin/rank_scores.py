@@ -22,7 +22,7 @@ if __name__ == "__main__":
 	scoreboard = []
 	for (dirpath, dirnames, filenames) in walk(sys.argv[2]):
 		for fname in filenames:
-			p = subprocess.Popen(["recognizer/dtw/compute_dtw",feature_file,dirpath+fname],stdout=subprocess.PIPE)
+			p = subprocess.Popen(["recognizer/dtw/bin/compute_dtw",feature_file,dirpath+fname],stdout=subprocess.PIPE)
 			out,err = p.communicate()
 			score = out.rstrip().strip()
 			print score
