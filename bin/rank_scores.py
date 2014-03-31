@@ -22,9 +22,11 @@ if __name__ == "__main__":
 	scoreboard = []
 	for (dirpath, dirnames, filenames) in walk(sys.argv[2]):
 		for fname in filenames:
-			p = subprocess.Popen(["recognizer/aquila-dtw/dtw",feature_file,dirpath+fname],stdout=subprocess.PIPE)
+			p = subprocess.Popen(["recognizer/dtw/compute_dtw",feature_file,dirpath+fname],stdout=subprocess.PIPE)
 			out,err = p.communicate()
-			scoreboard.append( (fname,float(out.rstrip().strip())) )
+			score = out.rstrip().strip()
+			print score
+			scoreboard.append( (fname,float(score)) )
 
 	sorted_score = sorted(scoreboard,key=lambda e: e[1])
 	print "\n".join(map(lambda e: str(e[1])+"  "+strip_suffix(e[0]),sorted_score))
