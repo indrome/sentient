@@ -1,7 +1,7 @@
 LDFLAGS=-lfftw3f -lfftw3 -lsndfile feature_extractor/lib/processing.o  feature_extractor/lib/mfcc.o feature_extractor/lib/support.o
 CFLAGS=-std=c++11 -Iserver/include -Lfeature_extractor/lib
 
-.PHONY: server feature_extractor recognizer
+.PHONY: all clean server feature_extractor recognizer
 
 all: feature_extractor recognizer server
 	mkdir -p bin
@@ -17,3 +17,8 @@ feature_extractor:
 	$(MAKE) -C ./feature_extractor
 recognizer:
 	$(MAKE) -C ./recognizer/dtw
+
+clean:
+	$(MAKE) clean -C ./server
+	$(MAKE) clean -C ./feature_extractor
+	$(MAKE) clean -C ./recognizer/dtw
