@@ -25,7 +25,6 @@ if __name__ == "__main__":
 			p = subprocess.Popen(["recognizer/dtw/bin/compute_dtw",feature_file,dirpath+fname],stdout=subprocess.PIPE)
 			out,err = p.communicate()
 			score = out.rstrip().strip()
-			print score
 			scoreboard.append( (fname,float(score)) )
 
 	sorted_score = sorted(scoreboard,key=lambda e: e[1])
