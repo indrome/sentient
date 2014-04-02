@@ -7,7 +7,6 @@ CFLAGS=-Wall -Iinclude/ -O3 -std=c++11
 all: lib/mfcc.o lib/processing.o lib/support.o
 
 extraction: lib/support.o lib/processing.o
-	mkdir -p bin
 	$(CXX) $(CFLAGS) src/extraction.cpp lib/support.o lib/processing.o $(LIBS) -o bin/extraction
 
 lib/mfcc.o: src/mfcc.cpp 
