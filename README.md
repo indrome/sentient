@@ -30,6 +30,11 @@ Example: Running the server
 ```$: ./bin/server 192.168.0.100 54321 
 ```
 
+When receiving, the server store the speech signal intermittently in a file in the top-level directory called sample.wav. 
+After processing sample.wav the feature extractor stores a file in the top-level directory called features.json which may 
+be saved to reference/ and given a proper name. Upon a successful lookup into reference, the classifier will try to run a 
+bash script that has the same name in the scripts directory.
+
 Note
 ====
 
