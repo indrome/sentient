@@ -38,5 +38,5 @@ bash script that has the same name in the scripts directory.
 Note
 ====
 
-* Port is fixed in source to 54321
-
+* Port is fixed in source to 54321 
+* A high-pass filter is recommended for optimal training.
