@@ -27,7 +27,8 @@ Overview
 Example: Running the server
 ===========================
 
-```$: ./bin/server 192.168.0.100 54321 
+```
+$: ./bin/server 192.168.0.100 54321 
 ```
 
 When receiving, the server store the speech signal intermittently in a file in the top-level directory called sample.wav. 
