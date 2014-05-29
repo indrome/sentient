@@ -12,6 +12,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <sys/time.h>
 
 #include <json_parser.hpp>
 #include <mfcc.hpp>
@@ -54,8 +55,12 @@ void process(vector<precision> speech){
 
 void receive( int socket ){
 
+	struct timeval start,end;
+
 	cout << "Worker thread started" << endl;
-	
+
+	gettimeofday(&start, NULL);
+
 	int num_read = 0;
 	char buffer[RECV_BUFF_SIZE]; bzero(buffer,RECV_BUFF_SIZE);
 
@@ -93,6 +98,12 @@ void receive( int socket ){
 	process(speech);
 	
 	thd.join();
+
+	gettimeofday(&end, NULL);
+	double delta = ((end.tv_sec  - start.tv_sec) * 1000000u + 
+	         end.tv_usec - start.tv_usec) / 1.e6;
+
+	printf("[RECEIVE] Wall time: %f\n",delta);
 
 }
 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <gperftools/profiler.h>
 
 #include "dtw.hpp"
 
@@ -88,23 +89,43 @@ vector<float> get_vector_from_json(const char* fname){
 
 int main(int argc, char* argv[]) {
 
-	if(argc != 3){
+	if(argc < 3){
 		usage(argv);
 		exit(1);
 	}
 
+	int num_files_in = argc-2;
+
 	char* fname1 = argv[1];
-	char* fname2 = argv[2];
+	vector< vector<float> >  feature_vectors;
+	vector< string > feature_names;
+
+	for(int i = 2; i < num_files_in+2; i++) {
+
+		auto v = get_vector_from_json( argv[i] );	
+		feature_vectors.push_back( v );
+		feature_names.push_back( (string)argv[i] );
+
+	}
+
+	#ifdef _PROFILE
+	ProfilerStart("/tmp/prof.out");
+	#endif
 
 	auto v1 = get_vector_from_json(fname1);
-	auto v2 = get_vector_from_json(fname2);
 
-	float dist = dtw_dist(v1,v2,32);
+	for( int i = 0; i < feature_names.size(); i++ ){ 
+		auto v2 = feature_vectors[i];
+		auto f2 = feature_names[i];
+		float dist = dtw_dist(v1,v2,32);
+		printf("%s %f\n",f2.c_str(), dist);
+	}
 
-	//Aquila::Dtw dtw;
-	//double dist = dtw.getDistance(v1,v2);
+	#ifdef _PROFILE
+	ProfilerStop();
+	#endif
 
-	cout << dist << endl;
+
 
 
 	return 1;

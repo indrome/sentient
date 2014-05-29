@@ -1,15 +1,46 @@
-CFLAGS=-std=c++11 -Wall -O3 -Iinclude/
+CC		=g++
+SHELL 	=/bin/sh
 
-all: lib/dtw.o bin/compute_dtw
+FLAGS			=-std=c++11 -Iinclude/
+CFLAGS			=-Wall
+DEBUGFLAGS		=-O0 -g -D _DEBUG
+RELEASEFLAGS 	=-O3 -D NDEBUG
 
-lib/dtw.o: src/dtw.cpp include/dtw.hpp
-	g++ $(CFLAGS) src/dtw.cpp -c -o lib/dtw.o -lm
+LDFLAGS		=-L/usr/local/lib/ -lm
 
-bin/compute_dtw: lib/dtw.o src/compute_dtw.cpp include/dtw.hpp 
-	g++ $(CFLAGS) src/compute_dtw.cpp lib/dtw.o -o bin/compute_dtw 
+SRCS	=$(shell echo src/*.cpp)
+OBJS 	= $(addprefix lib/,$(notdir $(SRCS:.cpp=.o)))
+
+COMMON	=./include/dtw.hpp
+TARGET	=json_dtw
+
+CPUPROFILE?=/tmp/prof.out
+LIBPROFILER_PATH=/usr/local/lib/libprofiler.so.0
+
+all: $(TARGET) 
+.PHONY: profile_run clean
+
+$(TARGET) : $(OBJS) $(COMMON)	
+	$(CC) $(FLAGS) $(CFLAGS) $(DEBUGFLAGS) $(LDFLAGS) -o ./bin/$(TARGET) $(SRCS)
+
+release: $(OBJS) $(COMMON)
+	$(CC) $(FLAGS) $(CFLAGS) $(RELEASEFLAGS) $(LDFLAGS) -o ./bin/$(TARGET) $(SRCS)
+
+lib/%.o : ./src/%.cpp $(HEADERS) $(COMMON)
+	$(CC) $(FLAGS) $(CFLAGS) $(DEBUGFLAGS) -c -o $@ $<
+
+
+profile_run: CPUPROFILE_FREQUENCY=1000
+profile_run: 
+	CPUPROFILE_FREQUENCY=1000 LD_PRELOAD=/usr/local/lib/libprofiler.so.0 ./bin/json_dtw samples/play.json samples/*
+	#pprof --text ./bin/$(TARGET) | tee /tmp/profile.txt 
+
+profile: LDFLAGS+=-L/usr/local/lib/ -lprofiler
+profile: FLAGS+=-D _PROFILE
+
+profile: $(TARGET) 
 
 clean:
-	rm -f bin/compute_dtw
-	rm -f lib/*.o
-
+	rm -f bin/*
+	rm -f lib/*
 

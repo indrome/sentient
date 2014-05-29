@@ -7,6 +7,8 @@
 
 using namespace std;
 
+#define MIN(a,b) ((a < b )?a:b)
+
 static inline float dist_L2(float a, float b){
 	return fabs(a-b);
 }
@@ -16,9 +18,6 @@ static inline float minf(float a, float b){
 }
 
 float dtw_dist(vector<float> s, vector<float> t, int w){
-
-	assert(w > 0 );
-
 
 	int N = s.size();
 	int M = t.size();
@@ -38,9 +37,8 @@ float dtw_dist(vector<float> s, vector<float> t, int w){
 		int start = (1 > i-w) ? 1 : i-w;
 		int stop = (M < i+w) ? M : i+w;
 		for( int j = start; j < stop; j++) {
-		//for(int j = 1; j < M; j++){
 			float cost = dist_L2(s[i-1],t[j-1]);
-			DTW[i][j] = cost + minf(minf( DTW[i-1][j], DTW[i][j-1]), DTW[i-1][j-1]);
+			DTW[i][j] = cost + MIN( MIN( DTW[i-1][j], DTW[i][j-1]), DTW[i-1][j-1] );
 		}
 	}
 	
