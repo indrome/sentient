@@ -8,8 +8,18 @@ About
 
 This is still considered a non-official release.
 
+Dependencies
+============
+
+libsndfile
+fftw3
+
+For debugging purposes, also install the google CPU profiler.
+
 Installation
 ============
+
+
 
 In the top-level directory, type ``make``.
 

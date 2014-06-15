@@ -4,7 +4,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
+#ifdef _PROFILE 
 #include <gperftools/profiler.h>
+#endif
 
 #include "dtw.hpp"
 
